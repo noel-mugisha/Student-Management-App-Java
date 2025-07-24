@@ -1,5 +1,6 @@
 package com.noel.repository;
 
+import com.noel.exceptions.DuplicateStudentException;
 import com.noel.model.Student;
 
 import java.util.ArrayList;
@@ -10,7 +11,11 @@ public class StudentRepository {
     private static final List<Student> students = new ArrayList<>();
 
     // method to add a student
-    public void addStudent(Student student) {
+    public void addStudent(Student student) throws DuplicateStudentException {
+        Optional<Student> optional = students.stream().filter(s -> s.getId() == student.getId()).findFirst();
+        if (optional.isPresent()) {
+            throw new DuplicateStudentException("Student with id " + student.getId() + " already exists");
+        }
         students.add(student);
     }
 
